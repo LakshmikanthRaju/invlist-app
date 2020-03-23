@@ -1,0 +1,2 @@
+rootProject.name='InvList'
+include ':app'
