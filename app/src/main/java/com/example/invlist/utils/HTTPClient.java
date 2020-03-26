@@ -1,4 +1,4 @@
-package com.example.invlist.components;
+package com.example.invlist.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

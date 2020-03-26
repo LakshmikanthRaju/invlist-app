@@ -5,7 +5,7 @@ import java.util.Map;
 
 public enum InvType {
 
-    EQUITY(1), FOREX(2), STOCK(3);
+    EQUITY(1), STOCK(2), FOREX(3), DEBT(4);
 
     private final int value;
     private static Map map = new HashMap();

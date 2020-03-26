@@ -1,4 +1,4 @@
-package com.example.invlist.components;
+package com.example.invlist.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
-
-    private static int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
     public static int getDaysCount(String curDate, String curFormat, String oldDate, String oldFormat) {
         try {
@@ -33,7 +31,14 @@ public class DateUtils {
         }
     }
 
-    public static int cpuCount() {
-        return NUMBER_OF_CORES;
+    public static String convertFormat(String date, String dateFormat) {
+        try {
+            SimpleDateFormat dateFor = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            Date dateObj = new SimpleDateFormat(dateFormat).parse(date);
+
+            return dateFor.format(dateObj);
+        } catch (ParseException e) {
+            return "";
+        }
     }
 }

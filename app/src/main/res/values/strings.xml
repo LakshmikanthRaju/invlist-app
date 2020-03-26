@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">InvList</string>
-    <string name="tab_text_1">Equity</string>
-    <string name="tab_text_2">Forex</string>
-    <string name="tab_text_3">Stock</string>
+    <string name="equity_text">Equity</string>
+    <string name="debt_text">Debt</string>
+    <string name="forex_text">Forex</string>
+    <string name="stock_text">Stock</string>
 </resources>

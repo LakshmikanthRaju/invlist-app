@@ -1,5 +1,9 @@
 package com.example.invlist.components;
 
+import com.example.invlist.utils.DateUtils;
+import com.example.invlist.utils.HTTPClient;
+import com.example.invlist.utils.HelperUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,46 +17,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-public class Stock implements InvComponent {
+public class Stock extends InvComponent {
 
-    private static final String[] MY_STOCK = { "VMW", "DELL" };
+    private static final String[] MY_STOCK = HelperUtils.getStockList();
     private static final String STOCK_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&apikey=50TGXNDTSOUF0HH6";
 
-    private String values = null;
-    private boolean loading = false;
-
     public Stock() {
+        super("Fetching Stock prices");
     }
 
     @Override
-    public String values() {
-        if (values != null) {
-            System.out.println("Stored: " + values);
-            return values;
-        }
-        load();
-        return "Fetching Stock prices";
-    }
-
-    @Override
-    public void load() {
-        if (loading) return;
-        loading = true;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getPrices();
-            }
-        }).start();
-    }
-
-    private void getPricesSlow() {
-        String output = "";
-        output = Arrays.stream(MY_STOCK).map(s -> getPrice(s)).collect(Collectors.joining("\n"));
-        this.values = output;
-    }
-
-    private void getPrices() {
+    public void getPrices() {
         String output = "";
         List<Callable<String>> callables = new ArrayList<Callable<String>>();
 
@@ -63,7 +38,7 @@ public class Stock implements InvComponent {
             }
         }));
 
-        ExecutorService executor = Executors.newFixedThreadPool(DateUtils.cpuCount() * 2);
+        ExecutorService executor = Executors.newFixedThreadPool(HelperUtils.cpuCount() * 2);
         try {
             List<Future<String>> futures = executor.invokeAll(callables);
             output = futures.stream().map(f -> {
@@ -78,12 +53,24 @@ public class Stock implements InvComponent {
         } finally {
             executor.shutdown(); // shut down the executor manually
         }
-        this.values = output;
-        loading = false;
+        //setValue(output);
+    }
+
+    private void getPricesSlow() {
+        String output = "";
+        output = Arrays.stream(MY_STOCK).map(s -> getPrice(s)).collect(Collectors.joining("\n"));
+        setValue(output);
     }
 
     private int getDaysCount(String curDate, String oldDate) {
         return DateUtils.getDaysCount(curDate, "yyyy-MM-dd", oldDate, "yyyy-MM-dd");
+    }
+
+    private String formatMessage(String stock, String curDate, String currPrice, String status) {
+        System.out.println(curDate);
+        String date = DateUtils.convertFormat(curDate, "yyyy-MM-dd HH:mm:ss");
+        System.out.println(date);
+        return String.format("%s :  %s, %s EDT\n%s", stock, currPrice, date, status);
     }
 
     private String parseResponse(String response) {
@@ -112,10 +99,10 @@ public class Stock implements InvComponent {
                     String oldPrice = oldObj.getString("2. high");
                     if (Float.parseFloat(currPrice) < Float.parseFloat(oldPrice)) {
                         int days = getDaysCount(curDate, oldDate);
-                        return String.format("%s, %s, %s, %f: Highest in %d days", stock, date, currPrice, diff, days);
+                        return formatMessage(stock, date, currPrice, String.format("+%f: Highest in %d days", diff, days));
                     }
                 }
-                return String.format("%s, %s, %s, %f: Highest in all days", stock, date, currPrice, diff);
+                return formatMessage(stock, date, currPrice, String.format("+%f: Highest in all days", diff));
             } else {
                 while(datesKey.hasNext()) {
                     String oldDate = datesKey.next();
@@ -123,10 +110,10 @@ public class Stock implements InvComponent {
                     String oldPrice = oldObj.getString("3. low");
                     if (Float.parseFloat(currPrice) > Float.parseFloat(oldPrice)) {
                         int days = getDaysCount(curDate, oldDate);
-                        return String.format("%s, %s, %s, %f: Lowest in %d days", stock, date, currPrice, diff, days);
+                        return formatMessage(stock, date, currPrice, String.format("%f: Lowest in %d days", diff, days));
                     }
                 }
-                return String.format("%s, %s, %s, %f: Lowest in all days", stock, date, currPrice, diff);
+                return formatMessage(stock, date, currPrice, String.format("%f: Lowest in %d days", diff));
             }
         } catch (JSONException e) {
             return response;
@@ -136,6 +123,15 @@ public class Stock implements InvComponent {
     private String getPrice(String stock) {
 
         String response = HTTPClient.getResponse(String.format(STOCK_URL, stock));
-        return parseResponse(response);
+        String value = "";
+        if (response.contains("Error Message")) {
+            value = "ERROR: Invalid API call for " + stock;
+        } else if (response.contains("Note")) {
+            value = "WARNING: Overload of API calls. Try after a minute";
+        } else {
+            value = parseResponse(response);
+        }
+        updateValue(value);
+        return value;
     }
 }
