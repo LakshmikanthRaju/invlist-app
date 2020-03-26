@@ -2,6 +2,8 @@ package com.example.invlist;
 
 import android.os.Bundle;
 
+import com.example.invlist.components.InvComponent;
+import com.example.invlist.components.InvFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -37,8 +39,14 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                InvFactory.reset();
+                Snackbar.make(view, "Refreshing...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                recreate();
+                //refresh();
+                //startActivity(getIntent());
             }
         });
 

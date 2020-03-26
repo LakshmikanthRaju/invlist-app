@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
 
+    private static int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
     public static int getDaysCount(String curDate, String curFormat, String oldDate, String oldFormat) {
         try {
             Date curDateObj = new SimpleDateFormat(curFormat).parse(curDate);
@@ -29,5 +31,9 @@ public class DateUtils {
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    public static int cpuCount() {
+        return NUMBER_OF_CORES;
     }
 }

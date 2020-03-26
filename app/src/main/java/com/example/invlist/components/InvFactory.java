@@ -6,6 +6,12 @@ public class InvFactory {
     private static InvComponent mf = null;
     private static InvComponent forex = null;
 
+    public static void reset() {
+        stock = null;
+        mf = null;
+        forex = null;
+    }
+
     public static InvComponent getInvComponent(InvType invType) {
         if (invType == InvType.EQUITY) {
             if (mf == null) {

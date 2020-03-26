@@ -3,8 +3,14 @@ package com.example.invlist.components;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class Stock implements InvComponent {
@@ -13,6 +19,7 @@ public class Stock implements InvComponent {
     private static final String STOCK_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&apikey=50TGXNDTSOUF0HH6";
 
     private String values = null;
+    private boolean loading = false;
 
     public Stock() {
     }
@@ -29,7 +36,8 @@ public class Stock implements InvComponent {
 
     @Override
     public void load() {
-        System.out.println("------Starting Stock-------------------------------------");
+        if (loading) return;
+        loading = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -38,14 +46,40 @@ public class Stock implements InvComponent {
         }).start();
     }
 
-    private void getPrices() {
+    private void getPricesSlow() {
         String output = "";
         output = Arrays.stream(MY_STOCK).map(s -> getPrice(s)).collect(Collectors.joining("\n"));
-        //for (String stock: MY_STOCK)
-        //    output = output + getPrice(stock) + "\n";
-
-        System.out.println(output);
         this.values = output;
+    }
+
+    private void getPrices() {
+        String output = "";
+        List<Callable<String>> callables = new ArrayList<Callable<String>>();
+
+        Arrays.stream(MY_STOCK).forEach((s) -> callables.add(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return getPrice(s);
+            }
+        }));
+
+        ExecutorService executor = Executors.newFixedThreadPool(DateUtils.cpuCount() * 2);
+        try {
+            List<Future<String>> futures = executor.invokeAll(callables);
+            output = futures.stream().map(f -> {
+                try {
+                    return f.get();
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+            }).collect(Collectors.joining("\n\n"));
+        } catch (InterruptedException e) {// thread was interrupted
+            e.printStackTrace();
+        } finally {
+            executor.shutdown(); // shut down the executor manually
+        }
+        this.values = output;
+        loading = false;
     }
 
     private int getDaysCount(String curDate, String oldDate) {

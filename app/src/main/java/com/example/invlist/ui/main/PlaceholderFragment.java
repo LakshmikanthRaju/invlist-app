@@ -48,13 +48,12 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textView = (TextView) view.findViewById(R.id.section_label);
-
-        //textView.setText("Fragment " + (position + 1));
 
         InvComponent invComponent = InvFactory.getInvComponent(InvType.valueOf(position));
         String value = (invComponent != null) ? invComponent.values() : "";
-        System.out.println("Fragment-" + position + ": " + value);
+        //System.out.println("Fragment-" + position + ": " + value);
+
+        textView = (TextView) view.findViewById(R.id.section_label);
         textView.setText(value);
     }
 
