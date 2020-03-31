@@ -33,6 +33,17 @@ public class DateUtils {
 
     public static String convertFormat(String date, String dateFormat) {
         try {
+            SimpleDateFormat dateFor = new SimpleDateFormat("dd-MMM-yyyy");
+            Date dateObj = new SimpleDateFormat(dateFormat).parse(date);
+
+            return dateFor.format(dateObj);
+        } catch (ParseException e) {
+            return "";
+        }
+    }
+
+    public static String convertTimestamp(String date, String dateFormat) {
+        try {
             SimpleDateFormat dateFor = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
             Date dateObj = new SimpleDateFormat(dateFormat).parse(date);
 

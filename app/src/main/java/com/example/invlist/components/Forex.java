@@ -19,11 +19,95 @@ import java.util.stream.Collectors;
 
 public class Forex extends InvComponent {
 
-    private static final String[] MY_FOREX = HelperUtils.getForexList();
+    private class Currency implements Callable<String> {
+        public String name;
+        public String price;
+        public String date;
+        public JSONObject pricesData;
+
+        public Currency(String name) {
+            this.name = name;
+        }
+
+        private String formatMessage(String curDate, String status) {
+            if (curDate.split("\\s+").length > 1) {
+                curDate = DateUtils.convertTimestamp(curDate, "yyyy-MM-dd HH:mm:ss");
+            } else {
+                curDate = DateUtils.convertFormat(curDate, "yyyy-MM-dd");
+            }
+            return String.format("%s :  %s, %s UTC\n%s", name, price, curDate, status);
+        }
+
+        private String parseResponse(String response) {
+
+            try {
+                JSONObject jsonResponse = new JSONObject(response);
+                String date = jsonResponse.getJSONObject("Meta Data").getString("5. Last Refreshed");
+                name = jsonResponse.getJSONObject("Meta Data").getString("2. From Symbol");
+
+                pricesData = jsonResponse.getJSONObject("Time Series FX (Daily)");
+                Iterator<String> datesKey = pricesData.keys();
+
+                String curDate = datesKey.next();
+                JSONObject curObject = pricesData.getJSONObject(curDate);
+                String currPrice = curObject.getString("4. close");
+                String prevPrice = pricesData.getJSONObject(datesKey.next()).getString("4. close");
+                float diff = Float.parseFloat(currPrice) - Float.parseFloat(prevPrice);
+
+                this.price = currPrice;
+                this.date = DateUtils.convertFormat(curDate, "yyyy-MM-dd");
+
+                datesKey = pricesData.keys();
+                datesKey.next();
+                if (diff > 0) {
+                    while(datesKey.hasNext()) {
+                        String oldDate = datesKey.next();
+                        JSONObject oldObj = pricesData.getJSONObject(oldDate);
+                        String oldPrice = oldObj.getString("2. high");
+                        if (Float.parseFloat(currPrice) < Float.parseFloat(oldPrice)) {
+                            int days = getDaysCount(curDate, oldDate);
+                            return formatMessage(date, String.format("+%f: Highest in %d days", diff, days));
+                        }
+                    }
+                    return formatMessage(date, String.format("+%f: Highest in all days", diff));
+                } else {
+                    while(datesKey.hasNext()) {
+                        String oldDate = datesKey.next();
+                        JSONObject oldObj = pricesData.getJSONObject(oldDate);
+                        String oldPrice = oldObj.getString("3. low");
+                        if (Float.parseFloat(currPrice) > Float.parseFloat(oldPrice)) {
+                            int days = getDaysCount(curDate, oldDate);
+                            return formatMessage(date, String.format("%f: Lowest in %d days", diff, days));
+                        }
+                    }
+                    return formatMessage(date, String.format("%f: Lowest in all days", diff));
+                }
+            } catch (JSONException e) {
+                return response;
+            }
+        }
+
+        public String call() throws Exception {
+            String response = HTTPClient.getResponse(String.format(FOREX_URL, name));
+            String value = "";
+            if (response.contains("Error Message")) {
+                value = "ERROR: Invalid API call for " + name;
+            } else if (response.contains("Note")) {
+                value = "WARNING: Overload of API calls. Try after a minute";
+            } else {
+                value = parseResponse(response);
+            }
+            updateValue(value);
+            return value;
+        }
+    }
+
     private static final String FOREX_URL = "https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=%s&to_symbol=INR&apikey=50TGXNDTSOUF0HH6";
+    private static String[] MY_FOREX;
 
     public Forex() {
         super("Fetching Forex rates");
+        MY_FOREX = HelperUtils.getForexList();
     }
 
     @Override
@@ -31,12 +115,13 @@ public class Forex extends InvComponent {
         String output = "";
         List<Callable<String>> callables = new ArrayList<Callable<String>>();
 
-        Arrays.stream(MY_FOREX).forEach((f) -> callables.add(new Callable<String>() {
+        /*Arrays.stream(MY_FOREX).forEach((f) -> callables.add(new Callable<String>() {
             @Override
             public String call() throws Exception {
                 return getPrice(f);
             }
-        }));
+        }));*/
+        Arrays.stream(MY_FOREX).forEach((f) -> callables.add(new Currency(f)));
 
         ExecutorService executor = Executors.newFixedThreadPool(HelperUtils.cpuCount() * 2);
         try {
@@ -69,11 +154,9 @@ public class Forex extends InvComponent {
         return DateUtils.getDaysCount(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
     }
 
-    private String formatMessage(String stock, String curDate, String currPrice, String status) {
-        System.out.println(curDate);
+    private String formatMessage(String forex, String curDate, String currPrice, String status) {
         String date = DateUtils.convertFormat(curDate, "yyyy-MM-dd HH:mm:ss");
-        System.out.println(date);
-        return String.format("%s :  %s, %s UTC\n%s", stock, currPrice, date, status);
+        return String.format("%s :  %s, %s UTC\n%s", forex, currPrice, date, status);
     }
 
     private String parseResponse(String response) {

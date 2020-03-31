@@ -23,6 +23,8 @@ public class MutualFund extends InvComponent {
         public String code;
         public String price;
         public String date;
+        public String type;
+        public JSONArray pricesData;
 
         public MF(String name, String code, String price, String date) {
             this.name = name;
@@ -38,11 +40,12 @@ public class MutualFund extends InvComponent {
         private String processResponse(String response) {
             try {
                 JSONObject jsonResponse = new JSONObject(response);
-                JSONArray data = jsonResponse.getJSONArray("data");
+                type = jsonResponse.getJSONObject("meta").getString("scheme_category");
+                pricesData = jsonResponse.getJSONArray("data");
 
-                JSONObject prevObject = data.getJSONObject(0);
+                JSONObject prevObject = pricesData.getJSONObject(0);
                 if (isSameDate(date, prevObject.getString("date"))) {
-                    prevObject = data.getJSONObject(1);
+                    prevObject = pricesData.getJSONObject(1);
                 }
 
                 String prevPrice = prevObject.getString("nav");
@@ -51,8 +54,8 @@ public class MutualFund extends InvComponent {
                 Float curPrice = Float.parseFloat(price);
                 JSONObject matchObj = null;
                 if (diff > 0) {
-                    for (int i = 0; i < data.length(); i++) {
-                        matchObj = data.getJSONObject(i);
+                    for (int i = 0; i < pricesData.length(); i++) {
+                        matchObj = pricesData.getJSONObject(i);
                         if (curPrice < Float.parseFloat(matchObj.getString("nav"))) {
                             int days = getDaysCount(date, matchObj.getString("date"));
                             return formatMessage(String.format("+%f: Highest in %d days", diff, days));
@@ -60,8 +63,8 @@ public class MutualFund extends InvComponent {
                     }
                     return formatMessage(String.format("+%f: Highest in all days", diff));
                 } else {
-                    for (int i = 0; i < data.length(); i++) {
-                        matchObj = data.getJSONObject(i);
+                    for (int i = 0; i < pricesData.length(); i++) {
+                        matchObj = pricesData.getJSONObject(i);
                         if (curPrice > Float.parseFloat(matchObj.getString("nav"))) {
                             int days = getDaysCount(date, matchObj.getString("date"));
                             return formatMessage(String.format("%f: Lowest in %d days", diff, days));
@@ -69,7 +72,6 @@ public class MutualFund extends InvComponent {
                     }
                     return formatMessage(String.format("+%f: Lowest in all days", diff));
                 }
-
             } catch (JSONException e) {
                 return String.format("Failed: %s, %s, %s", name, date, price);
             }
@@ -85,7 +87,8 @@ public class MutualFund extends InvComponent {
 
     private static final String MF_URL = "https://api.mfapi.in/mf/%s";
     private static final String MF_LIST_URL = "https://www.amfiindia.com/spages/NAVAll.txt";
-    private List<String> MY_FUND = null;
+    private static List<String> MY_FUND;
+    private String[] mfListArr = null;
 
     public MutualFund(String[] fundList) {
         super("Fetching Mutual Funds NAVs");
@@ -138,18 +141,10 @@ public class MutualFund extends InvComponent {
         System.out.println("Time taken in milliseconds: " + (end-start)/1000000 );
     }
 
-    private boolean isSameDate(String curDate, String oldDate) {
-        return DateUtils.isSameDate(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
-    }
-
-    private int getDaysCount(String curDate, String oldDate) {
-        return DateUtils.getDaysCount(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
-    }
-
     private List<MF> getMFList() {
         List<MF> mfList = new ArrayList<>();
         String response = HTTPClient.getResponse(MF_LIST_URL);
-        String[] mfListArr = response.split("\\n");
+        mfListArr = response.split("\\n");
 
         Arrays.asList(mfListArr).stream()
                 .filter(mf->mf.split(";").length == 6)
@@ -170,5 +165,13 @@ public class MutualFund extends InvComponent {
         //mfList.forEach(e->System.out.print(e.name));
 
         return mfList;
+    }
+
+    private boolean isSameDate(String curDate, String oldDate) {
+        return DateUtils.isSameDate(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
+    }
+
+    private int getDaysCount(String curDate, String oldDate) {
+        return DateUtils.getDaysCount(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
     }
 }

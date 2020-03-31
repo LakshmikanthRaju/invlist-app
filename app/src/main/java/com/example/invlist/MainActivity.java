@@ -10,6 +10,7 @@ import com.example.invlist.ui.fragments.ForexFragment;
 import com.example.invlist.ui.fragments.EquityFragment;
 import com.example.invlist.ui.fragments.StockFragment;
 import com.example.invlist.ui.main.ViewPagerAdapter;
+import com.example.invlist.utils.HelperUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        HelperUtils.setContext(this);
 
         ViewPager viewPager = findViewById(R.id.view_pager);
         setupViewPager(viewPager);

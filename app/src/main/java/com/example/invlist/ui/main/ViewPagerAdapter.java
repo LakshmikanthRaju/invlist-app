@@ -18,7 +18,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        System.out.println("Called: " + position);
+        //System.out.println("Called: " + position);
         return mFragmentList.get(position);
     }
 
