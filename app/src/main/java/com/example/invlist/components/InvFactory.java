@@ -31,12 +31,12 @@ public class InvFactory {
     public static InvComponent getInvComponent(InvType invType) {
         if (invType == InvType.EQUITY) {
             if (equity == null) {
-                equity = new MutualFund(HelperUtils.getEquityList());
+                equity = new MutualFund(HelperUtils.getEquityList(), InvType.EQUITY);
             }
             return equity;
         } else if (invType == InvType.DEBT) {
             if (debt == null) {
-                debt = new MutualFund(HelperUtils.getDebtList());
+                debt = new MutualFund(HelperUtils.getDebtList(), InvType.DEBT);
             }
             return debt;
         } else if (invType == InvType.STOCK) {

@@ -1,5 +1,6 @@
 package com.example.invlist.components;
 
+import com.example.invlist.ui.fragments.StockFragment;
 import com.example.invlist.utils.DateUtils;
 import com.example.invlist.utils.HTTPClient;
 import com.example.invlist.utils.HelperUtils;
@@ -100,7 +101,8 @@ public class Stock extends InvComponent {
             } else {
                 value = parseResponse(response);
             }
-            updateValue(value);
+            //updateValue(value);
+            StockFragment.updateListView(value);
             return value;
         }
     }

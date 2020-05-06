@@ -1,5 +1,6 @@
 package com.example.invlist.components;
 
+import com.example.invlist.ui.fragments.ForexFragment;
 import com.example.invlist.utils.DateUtils;
 import com.example.invlist.utils.HTTPClient;
 import com.example.invlist.utils.HelperUtils;
@@ -97,7 +98,8 @@ public class Forex extends InvComponent {
             } else {
                 value = parseResponse(response);
             }
-            updateValue(value);
+            //updateValue(value);
+            ForexFragment.updateListView(value);
             return value;
         }
     }

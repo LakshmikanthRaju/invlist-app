@@ -1,5 +1,6 @@
 package com.example.invlist;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 
@@ -23,11 +24,14 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        context = this;
 
         HelperUtils.setContext(this);
 

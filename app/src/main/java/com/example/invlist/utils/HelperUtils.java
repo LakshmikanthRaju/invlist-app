@@ -26,6 +26,9 @@ public class HelperUtils {
                 "ICICI Prudential Value Discovery Fund - Growth",
                 "Aditya Birla Sun Life MIDCAP Fund-Growth",
                 "HDFC Mid-Cap Opportunities Fund - Growth Option",
+                "Axis Bluechip Fund - Regular Plan - Growth",
+                "Kotak Standard Multicap Fund - Growth",
+                "L&T Mid Cap Fund-Regular Plan-Growth",
         };
         return MyEquityList;
     }
@@ -41,14 +44,14 @@ public class HelperUtils {
         InvListDbHelper invDb = new InvListDbHelper(context);
         String[] values = null;
 
-        if (invDb.isEquityEmpty()) {
-            System.out.println("Adding to database");
-            invDb.addEquity(defaultEquityList());
+        //if (invDb.isEquityEmpty()) {
+            //System.out.println("Adding to database");
+            //invDb.addEquity(defaultEquityList());
             values = concatenate(defaultEquityList(), getElssList());
-        } else {
+        /*} else {
             System.out.println("Fetching from database");
             values = concatenate(invDb.getEquity(), getElssList());
-        }
+        }*/
         invDb.close();
         return values;
     }
@@ -65,12 +68,12 @@ public class HelperUtils {
         InvListDbHelper invDb = new InvListDbHelper(context);
         String[] values = null;
 
-        if (invDb.isElssEmpty()) {
-            invDb.addElss(defaultElssList());
+        //if (invDb.isElssEmpty()) {
+            //invDb.addElss(defaultElssList());
             values = defaultElssList();
-        } else {
+        /*} else {
             values = invDb.getElss();
-        }
+        }*/
         invDb.close();
         return values;
     }
@@ -88,12 +91,12 @@ public class HelperUtils {
         InvListDbHelper invDb = new InvListDbHelper(context);
         String[] values = null;
 
-        if (invDb.isDebtEmpty()) {
-            invDb.addDebt(defaultDebtList());
+        //if (invDb.isDebtEmpty()) {
+            //invDb.addDebt(defaultDebtList());
             values = defaultDebtList();
-        } else {
+        /*} else {
             values = invDb.getDebt();
-        }
+        }*/
         invDb.close();
         return values;
     }

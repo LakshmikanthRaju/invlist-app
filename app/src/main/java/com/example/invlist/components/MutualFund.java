@@ -1,12 +1,10 @@
 package com.example.invlist.components;
 
+import com.example.invlist.ui.fragments.DebtFragment;
+import com.example.invlist.ui.fragments.EquityFragment;
 import com.example.invlist.utils.DateUtils;
 import com.example.invlist.utils.HTTPClient;
 import com.example.invlist.utils.HelperUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,81 +16,18 @@ import java.util.concurrent.Future;
 
 public class MutualFund extends InvComponent {
 
-    private class MF implements Callable<String> {
-        public String name;
-        public String code;
-        public String price;
-        public String date;
-        public String type;
-        public JSONArray pricesData;
-
-        public MF(String name, String code, String price, String date) {
-            this.name = name;
-            this.code = code;
-            this.price = price;
-            this.date = date;
-        }
-
-        private String formatMessage(String status) {
-            return String.format("%s\n%s, %s\n%s", name, date, price, status);
-        }
-
-        private String processResponse(String response) {
-            try {
-                JSONObject jsonResponse = new JSONObject(response);
-                type = jsonResponse.getJSONObject("meta").getString("scheme_category");
-                pricesData = jsonResponse.getJSONArray("data");
-
-                JSONObject prevObject = pricesData.getJSONObject(0);
-                if (isSameDate(date, prevObject.getString("date"))) {
-                    prevObject = pricesData.getJSONObject(1);
-                }
-
-                String prevPrice = prevObject.getString("nav");
-                float diff = Float.parseFloat(price) - Float.parseFloat(prevPrice);
-
-                Float curPrice = Float.parseFloat(price);
-                JSONObject matchObj = null;
-                if (diff > 0) {
-                    for (int i = 0; i < pricesData.length(); i++) {
-                        matchObj = pricesData.getJSONObject(i);
-                        if (curPrice < Float.parseFloat(matchObj.getString("nav"))) {
-                            int days = getDaysCount(date, matchObj.getString("date"));
-                            return formatMessage(String.format("+%f: Highest in %d days", diff, days));
-                        }
-                    }
-                    return formatMessage(String.format("+%f: Highest in all days", diff));
-                } else {
-                    for (int i = 0; i < pricesData.length(); i++) {
-                        matchObj = pricesData.getJSONObject(i);
-                        if (curPrice > Float.parseFloat(matchObj.getString("nav"))) {
-                            int days = getDaysCount(date, matchObj.getString("date"));
-                            return formatMessage(String.format("%f: Lowest in %d days", diff, days));
-                        }
-                    }
-                    return formatMessage(String.format("+%f: Lowest in all days", diff));
-                }
-            } catch (JSONException e) {
-                return String.format("Failed: %s, %s, %s", name, date, price);
-            }
-        }
-
-        public String call() throws Exception {
-            String response = HTTPClient.getResponse(String.format(MF_URL, code));
-            String value = processResponse(response);
-            updateValue(value);
-            return value;
-        }
-    }
-
-    private static final String MF_URL = "https://api.mfapi.in/mf/%s";
+    public static final String MF_URL = "https://api.mfapi.in/mf/%s";
     private static final String MF_LIST_URL = "https://www.amfiindia.com/spages/NAVAll.txt";
+
     private static List<String> MY_FUND;
     private String[] mfListArr = null;
+    private ArrayList<MF> mfList = null;
+    private InvType invType;
 
-    public MutualFund(String[] fundList) {
+    public MutualFund(String[] fundList, InvType invType) {
         super("Fetching Mutual Funds NAVs");
         MY_FUND = Arrays.asList(fundList);
+        this.invType = invType;
     }
 
     @Override
@@ -100,7 +35,7 @@ public class MutualFund extends InvComponent {
         String output = "";
         List<Callable<String>> callables = new ArrayList<Callable<String>>();
 
-        List<MF> mfList = getMFList();
+        this.mfList = getMFList();
         mfList.forEach((mf) -> callables.add(mf));
 
         //ExecutorService executor = Executors.newCachedThreadPool();
@@ -141,8 +76,9 @@ public class MutualFund extends InvComponent {
         System.out.println("Time taken in milliseconds: " + (end-start)/1000000 );
     }
 
-    private List<MF> getMFList() {
-        List<MF> mfList = new ArrayList<>();
+    private ArrayList<MF> getMFList() {
+
+        ArrayList<MF> mfsList = new ArrayList<>();
         String response = HTTPClient.getResponse(MF_LIST_URL);
         mfListArr = response.split("\\n");
 
@@ -151,7 +87,7 @@ public class MutualFund extends InvComponent {
                 .filter(mf->MY_FUND.contains(mf.split(";")[3]))
                 .forEach(mf->{
                     String[] mfSections = mf.split(";");
-                    mfList.add(new MF(mfSections[3], mfSections[0], mfSections[4], mfSections[5]));
+                    mfsList.add(new MF(mfSections[3], mfSections[0], mfSections[4], mfSections[5], invType));
         });
 
         /*for (String mfStr: mfListArr) {
@@ -164,14 +100,22 @@ public class MutualFund extends InvComponent {
         }*/
         //mfList.forEach(e->System.out.print(e.name));
 
-        return mfList;
+        return mfsList;
     }
 
-    private boolean isSameDate(String curDate, String oldDate) {
+    public static boolean isSameDate(String curDate, String oldDate) {
         return DateUtils.isSameDate(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
     }
 
-    private int getDaysCount(String curDate, String oldDate) {
+    public static int getDaysCount(String curDate, String oldDate) {
         return DateUtils.getDaysCount(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
+    }
+
+    public static void displayStatus(MF mf) {
+        if (mf.invType == InvType.EQUITY) {
+            EquityFragment.updateListView(mf);
+        } else if (mf.invType == InvType.DEBT) {
+            DebtFragment.updateListView(mf);
+        }
     }
 }
