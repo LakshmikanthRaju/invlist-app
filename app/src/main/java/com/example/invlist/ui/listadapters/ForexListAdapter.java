@@ -7,16 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.invlist.R;
+import com.example.invlist.components.Currency;
 import com.example.invlist.components.MF;
 
 import java.util.ArrayList;
 
-public class ForexListAdapter extends ArrayAdapter<String> {//implements View.OnClickListener {
+public class ForexListAdapter extends ArrayAdapter<Currency> {//implements View.OnClickListener {
 
-    private ArrayList<String> forexList;
+    private ArrayList<Currency> forexList;
     Context mContext;
     private Activity activity;
 
@@ -28,7 +30,7 @@ public class ForexListAdapter extends ArrayAdapter<String> {//implements View.On
         TextView status;
     }
 
-    public ForexListAdapter(Context context, Activity activity, ArrayList<String> mfList) {
+    public ForexListAdapter(Context context, Activity activity, ArrayList<Currency> mfList) {
         super(context, R.layout.mf_row_item, mfList);
         this.mContext = context;
         this.forexList = mfList;
@@ -38,29 +40,54 @@ public class ForexListAdapter extends ArrayAdapter<String> {//implements View.On
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        String status = getItem(position);
+        Currency currency = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mf_row_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.status_row_item, parent, false);
         }
 
-        TextView textView= (TextView) convertView.findViewById(R.id.name);
-        textView.setText(status);
+        TextView textViewName = (TextView) convertView.findViewById(R.id.name);
+        textViewName.setText(currency.name);
 
-        if (textView.getText().toString().contains("Highest")) {
-            textView.setTextColor(Color.rgb(0,153,0));
-        } else if (textView.getText().toString().contains("Lowest")){
-            textView.setTextColor(Color.RED);
+        TextView textViewDate = (TextView) convertView.findViewById(R.id.date);
+        textViewDate.setText(currency.date);
+
+        TextView textViewPrice = (TextView) convertView.findViewById(R.id.price);
+        textViewPrice.setText(currency.price);
+
+        TextView textViewStatus = (TextView) convertView.findViewById(R.id.status);
+        textViewStatus.setText(currency.message);
+
+        ImageView up_arrow = (ImageView)convertView.findViewById(R.id.up_arrow_icon);
+        ImageView down_arrow = (ImageView)convertView.findViewById(R.id.down_arrow_icon);
+
+        if (currency.message.contains("Highest")) {
+            //textViewName.setTextColor(Color.rgb(27, 168, 46));
+            textViewStatus.setTextColor(Color.rgb(27, 168, 46));
+
+            up_arrow.setColorFilter(Color.rgb(27, 168, 46));
+            up_arrow.setVisibility(View.VISIBLE);
+            down_arrow.setVisibility(View.INVISIBLE);
+        } else if (currency.message.contains("Lowest")){
+            //textViewName.setTextColor(Color.RED);
+            textViewStatus.setTextColor(Color.RED);
+
+            down_arrow.setColorFilter(Color.RED);
+            down_arrow.setVisibility(View.VISIBLE);
+            up_arrow.setVisibility(View.INVISIBLE);
         } else {
-            textView.setTextColor(Color.BLUE);
+            textViewStatus.setTextColor(Color.BLUE);
+            up_arrow.setVisibility(View.INVISIBLE);
+            down_arrow.setVisibility(View.INVISIBLE);
         }
+
         return convertView;
     }
 
-    public void addItem(String status) {
+    public void addItem(Currency currency) {
         activity.runOnUiThread(new Runnable() {
              public void run() {
-                 forexList.add(status);
+                 forexList.add(currency);
                  notifyDataSetChanged();
              }
         });

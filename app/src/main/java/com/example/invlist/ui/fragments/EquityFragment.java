@@ -27,7 +27,7 @@ public class EquityFragment extends Fragment {
     private static Context context;
     private static EquityListAdapter listAdapter;
     private ListView listView;
-    private static ArrayList<String> equityFunds = new ArrayList<String>();
+    private static ArrayList<MF> equityFunds = new ArrayList<MF>();
     private static Activity activity;
 
 

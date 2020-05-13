@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.invlist.R;
+import com.example.invlist.components.Currency;
+import com.example.invlist.components.Forex;
 import com.example.invlist.components.InvComponent;
 import com.example.invlist.components.InvFactory;
 import com.example.invlist.components.InvType;
@@ -26,7 +28,7 @@ public class ForexFragment extends Fragment {
     private static Context context;
     private static ForexListAdapter listAdapter = null;
     private ListView listView;
-    private static ArrayList<String> forexes = new ArrayList<String>();
+    private static ArrayList<Currency> forexes = new ArrayList<Currency>();
     private static Activity activity;
 
     public ForexFragment() {
@@ -61,8 +63,8 @@ public class ForexFragment extends Fragment {
         String value = (invComponent != null) ? invComponent.values() : "";
     }
 
-    public static void updateListView(String forexStatus) {
-        listAdapter.addItem(forexStatus);
+    public static void updateListView(Currency currency) {
+        listAdapter.addItem(currency);
     }
 }
 

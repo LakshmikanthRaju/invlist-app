@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.invlist.R;
@@ -17,21 +19,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class EquityListAdapter extends ArrayAdapter<String> {//implements View.OnClickListener {
+public class EquityListAdapter extends ArrayAdapter<MF> {//implements View.OnClickListener {
 
-    private ArrayList<String> equityList;
+    private ArrayList<MF> equityList;
     Context mContext;
     private Activity activity;
 
-    // View lookup cache
-    private static class ViewHolder {
-        //TextView name;
-        //TextView date;
-        //TextView diff;
-        TextView status;
-    }
-
-    public EquityListAdapter(Context context, Activity activity, ArrayList<String> equityList) {
+    public EquityListAdapter(Context context, Activity activity, ArrayList<MF> equityList) {
         super(context, R.layout.mf_row_item, equityList);
         this.mContext = context;
         this.equityList = equityList;
@@ -41,19 +35,43 @@ public class EquityListAdapter extends ArrayAdapter<String> {//implements View.O
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        String status = getItem(position);
+        MF equityFund = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.mf_row_item, parent, false);
         }
 
-        TextView textView= (TextView) convertView.findViewById(R.id.name);
-        textView.setText(status);
+        TextView textViewName = (TextView) convertView.findViewById(R.id.name);
+        textViewName.setText(equityFund.name);
 
-        if (textView.getText().toString().contains("Highest")) {
-            textView.setTextColor(Color.rgb(0,153,0));
+        TextView textViewDate = (TextView) convertView.findViewById(R.id.date);
+        textViewDate.setText(equityFund.date);
+
+        TextView textViewPrice = (TextView) convertView.findViewById(R.id.price);
+        textViewPrice.setText(equityFund.price);
+
+        TextView textViewStatus = (TextView) convertView.findViewById(R.id.status);
+        textViewStatus.setText(equityFund.message);
+
+        ImageView up_arrow = (ImageView)convertView.findViewById(R.id.up_arrow_icon);
+        ImageView down_arrow = (ImageView)convertView.findViewById(R.id.down_arrow_icon);
+
+        if (equityFund.message.contains("Highest")) {
+
+            //textViewName.setTextColor(Color.rgb(27, 168, 46));
+            textViewStatus.setTextColor(Color.rgb(27, 168, 46));
+
+            up_arrow.setColorFilter(Color.rgb(27, 168, 46));
+            up_arrow.setVisibility(View.VISIBLE);
+            down_arrow.setVisibility(View.INVISIBLE);
         } else {
-            textView.setTextColor(Color.RED);
+
+            //textViewName.setTextColor(Color.RED);
+            textViewStatus.setTextColor(Color.RED);
+
+            down_arrow.setColorFilter(Color.RED);
+            down_arrow.setVisibility(View.VISIBLE);
+            up_arrow.setVisibility(View.INVISIBLE);
         }
         return convertView;
     }
@@ -61,7 +79,7 @@ public class EquityListAdapter extends ArrayAdapter<String> {//implements View.O
     public void addItem(MF mf) {
         activity.runOnUiThread(new Runnable() {
              public void run() {
-                 equityList.add(mf.message);
+                 equityList.add(mf);
                  notifyDataSetChanged();
              }
         });

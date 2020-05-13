@@ -26,7 +26,7 @@ public class DebtFragment extends Fragment {
     private static Context context;
     private static DebtListAdapter listAdapter;
     private ListView listView;
-    private static ArrayList<String> debtFunds = new ArrayList<String>();
+    private static ArrayList<MF> debtFunds = new ArrayList<MF>();
     private static Activity activity;
 
     public DebtFragment() {

@@ -16,6 +16,7 @@ import com.example.invlist.R;
 import com.example.invlist.components.InvComponent;
 import com.example.invlist.components.InvFactory;
 import com.example.invlist.components.InvType;
+import com.example.invlist.components.Share;
 import com.example.invlist.ui.listadapters.StockListAdapter;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class StockFragment extends Fragment {
     private static Context context;
     private static StockListAdapter listAdapter;
     private ListView listView;
-    private static ArrayList<String> stocks = new ArrayList<String>();
+    private static ArrayList<Share> stocks = new ArrayList<Share>();
     private static Activity activity;
 
     public StockFragment() {
@@ -62,8 +63,8 @@ public class StockFragment extends Fragment {
         String value = (invComponent != null) ? invComponent.values() : "";
     }
 
-    public static void updateListView(String stockStatus) {
-        listAdapter.addItem(stockStatus);
+    public static void updateListView(Share share) {
+        listAdapter.addItem(share);
     }
 }
 
