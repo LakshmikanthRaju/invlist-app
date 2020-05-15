@@ -54,22 +54,22 @@ public class MF implements Callable<String> {
                     if (curPrice < Float.parseFloat(matchObj.getString("nav"))) {
                         int days = MutualFund.getDaysCount(date, matchObj.getString("date"));
                         //return formatMessage(String.format("+%f: Highest in %d days", diff, days));
-                        return String.format("+%f: Highest in %d days", diff, days);
+                        return String.format("+%f (%.3f%%): Highest in %d days",diff, (diff/curPrice)*100.0, days);
                     }
                 }
                 //return formatMessage(String.format("+%f: Highest in all days", diff));
-                return String.format("+%f: Highest in all days", diff);
+                return String.format("+%f (%.3f%%): Highest in all days", diff, (diff/curPrice)*100.0);
             } else {
                 for (int i = 0; i < pricesData.length(); i++) {
                     matchObj = pricesData.getJSONObject(i);
                     if (curPrice > Float.parseFloat(matchObj.getString("nav"))) {
                         int days = MutualFund.getDaysCount(date, matchObj.getString("date"));
                         //return formatMessage(String.format("%f: Lowest in %d days", diff, days));
-                        return String.format("%f: Lowest in %d days", diff, days);
+                        return String.format("%f (%.3f%%): Lowest in %d days", diff, (diff/curPrice)*100.0, days);
                     }
                 }
                 //return formatMessage(String.format("+%f: Lowest in all days", diff));
-                return String.format("+%f: Lowest in all days", diff);
+                return String.format("+%f (%.3f%%): Lowest in all days", diff, (diff/curPrice)*100.0);
             }
         } catch (JSONException e) {
             return String.format("Failed: %s, %s, %s", name, date, price);

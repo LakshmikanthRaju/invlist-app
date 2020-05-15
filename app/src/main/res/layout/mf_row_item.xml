@@ -52,26 +52,36 @@
 
     <ImageView
         android:id="@+id/up_arrow_icon"
-        android:layout_height="40dp"
-        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/name"
-        android:src="@android:drawable/arrow_up_float"
-        android:scaleType="centerCrop"
-        android:gravity="center_horizontal"
-        android:padding="5dip"
+        android:rotation="270"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_media_play"
         android:visibility="invisible"/>
 
     <ImageView
         android:id="@+id/down_arrow_icon"
-        android:layout_height="40dp"
-        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/name"
+        android:rotation="90"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_media_play"
+        android:visibility="invisible"/>
+
+    <!--ImageView
+        android:id="@+id/down_arrow_icon"
+        android:layout_height="50dp"
+        android:layout_width="30dp"git
         android:layout_alignParentRight="true"
         android:layout_below="@id/name"
         android:src="@android:drawable/arrow_down_float"
         android:scaleType="centerCrop"
         android:gravity="center_horizontal"
         android:padding="5dip"
-        android:visibility="invisible"/>
+        android:visibility="invisible"/-->
 
 </RelativeLayout>

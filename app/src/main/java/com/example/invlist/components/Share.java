@@ -60,6 +60,7 @@ public class Share implements Callable<String> {
 
             this.price = currPrice;
             this.date = formatDate(date);
+            Float curPrice = Float.parseFloat(currPrice);
 
             datesKey = prices.keys();
             datesKey.next();
@@ -68,27 +69,27 @@ public class Share implements Callable<String> {
                     String oldDate = datesKey.next();
                     JSONObject oldObj = prices.getJSONObject(oldDate);
                     String oldPrice = oldObj.getString("2. high");
-                    if (Float.parseFloat(currPrice) < Float.parseFloat(oldPrice)) {
+                    if (curPrice < Float.parseFloat(oldPrice)) {
                         int days = Stock.getDaysCount(curDate, oldDate);
                         //return formatMessage(date, String.format("+%f: Highest in %d days", diff, days));
-                        return String.format("+%f: Highest in %d days", diff, days);
+                        return String.format("+%f (%.3f%%): Highest in %d days", diff, (diff/curPrice)*100.0, days);
                     }
                 }
                 //return formatMessage(date, String.format("+%f: Highest in all days", diff));
-                return String.format("+%f: Highest in all days", diff);
+                return String.format("+%f (%.3f%%): Highest in all days", diff, (diff/curPrice)*100.0);
             } else {
                 while(datesKey.hasNext()) {
                     String oldDate = datesKey.next();
                     JSONObject oldObj = prices.getJSONObject(oldDate);
                     String oldPrice = oldObj.getString("3. low");
-                    if (Float.parseFloat(currPrice) > Float.parseFloat(oldPrice)) {
+                    if (curPrice > Float.parseFloat(oldPrice)) {
                         int days = Stock.getDaysCount(curDate, oldDate);
                         //return formatMessage(date, String.format("%f: Lowest in %d days", diff, days));
-                        return String.format("%f: Lowest in %d days", diff, days);
+                        return String.format("%f (%.3f%%): Lowest in %d days", diff, (diff/curPrice)*100.0, days);
                     }
                 }
                 //return formatMessage(date, String.format("%f: Lowest in %d days", diff));
-                return String.format("%f: Lowest in %d days", diff);
+                return String.format("%f (%.3f%%): Lowest in %d days", diff, (diff/curPrice)*100.0);
             }
         } catch (JSONException e) {
             return response;
