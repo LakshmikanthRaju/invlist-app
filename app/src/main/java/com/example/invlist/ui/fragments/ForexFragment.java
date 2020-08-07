@@ -39,6 +39,7 @@ public class ForexFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getContext();
+        forexes.clear();
     }
 
     @Override

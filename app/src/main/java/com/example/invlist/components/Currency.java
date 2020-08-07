@@ -21,15 +21,6 @@ public class Currency implements Callable<String> {
         this.name = name;
     }
 
-    private String formatMessage(String curDate, String status) {
-        if (curDate.split("\\s+").length > 1) {
-            curDate = DateUtils.convertTimestamp(curDate, "yyyy-MM-dd HH:mm:ss");
-        } else {
-            curDate = DateUtils.convertFormat(curDate, "yyyy-MM-dd");
-        }
-        return String.format("%s :  %s, %s UTC\n%s", name, price, curDate, status);
-    }
-
     private String formatDate(String curDate) {
         if (curDate.split("\\s+").length > 1) {
             curDate = DateUtils.convertTimestamp(curDate, "yyyy-MM-dd HH:mm:ss");
@@ -68,11 +59,9 @@ public class Currency implements Callable<String> {
                     String oldPrice = oldObj.getString("2. high");
                     if (curPrice < Float.parseFloat(oldPrice)) {
                         int days = Forex.getDaysCount(curDate, oldDate);
-                        //return formatMessage(date, String.format("+%f: Highest in %d days", diff, days));
                         return String.format("+%f (%.3f%%): Highest in %d days", diff, (diff/curPrice)*100.0, days);
                     }
                 }
-                //return formatMessage(date, String.format("+%f: Highest in all days", diff));
                 return String.format("+%f (%.3f%%): Highest in all days", diff, (diff/curPrice)*100.0);
             } else {
                 while(datesKey.hasNext()) {
@@ -81,11 +70,9 @@ public class Currency implements Callable<String> {
                     String oldPrice = oldObj.getString("3. low");
                     if (curPrice > Float.parseFloat(oldPrice)) {
                         int days = Forex.getDaysCount(curDate, oldDate);
-                        //return formatMessage(date, String.format("%f: Lowest in %d days", diff, days));
                         return String.format("%f (%.3f%%): Lowest in %d days", diff, (diff/curPrice)*100.0, days);
                     }
                 }
-                //return formatMessage(date, String.format("%f: Lowest in all days", diff));
                 return String.format("%f (%.3f%%): Lowest in all days", diff, (diff/curPrice)*100.0);
             }
         } catch (JSONException e) {
@@ -102,7 +89,6 @@ public class Currency implements Callable<String> {
         } else {
             message = parseResponse(response);
         }
-        //updateValue(value);
         ForexFragment.updateListView(this);
         return message;
     }

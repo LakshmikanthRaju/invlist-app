@@ -20,16 +20,12 @@ public class MF implements Callable<String> {
     public JSONArray pricesData;
 
     public MF(String name, String code, String price, String date, InvType invType) {
-        this.name = WordUtils.capitalizeFully(name).substring(0, Math.min(name.length(), 50));
+        this.name = WordUtils.capitalizeFully(name);//.substring(0, Math.min(name.length(), 50));
         this.code = code;
         this.price = price;
         this.date = date;
         this.invType = invType;
         this.message = null;
-    }
-
-    private String formatMessage(String status) {
-        return String.format("%s\n%s, %s\n%s", name, date, price, status);
     }
 
     private String processResponse(String response) {
@@ -53,22 +49,18 @@ public class MF implements Callable<String> {
                     matchObj = pricesData.getJSONObject(i);
                     if (curPrice < Float.parseFloat(matchObj.getString("nav"))) {
                         int days = MutualFund.getDaysCount(date, matchObj.getString("date"));
-                        //return formatMessage(String.format("+%f: Highest in %d days", diff, days));
                         return String.format("+%f (%.3f%%): Highest in %d days",diff, (diff/curPrice)*100.0, days);
                     }
                 }
-                //return formatMessage(String.format("+%f: Highest in all days", diff));
                 return String.format("+%f (%.3f%%): Highest in all days", diff, (diff/curPrice)*100.0);
             } else {
                 for (int i = 0; i < pricesData.length(); i++) {
                     matchObj = pricesData.getJSONObject(i);
                     if (curPrice > Float.parseFloat(matchObj.getString("nav"))) {
                         int days = MutualFund.getDaysCount(date, matchObj.getString("date"));
-                        //return formatMessage(String.format("%f: Lowest in %d days", diff, days));
                         return String.format("%f (%.3f%%): Lowest in %d days", diff, (diff/curPrice)*100.0, days);
                     }
                 }
-                //return formatMessage(String.format("+%f: Lowest in all days", diff));
                 return String.format("+%f (%.3f%%): Lowest in all days", diff, (diff/curPrice)*100.0);
             }
         } catch (JSONException e) {
@@ -80,7 +72,6 @@ public class MF implements Callable<String> {
         String response = HTTPClient.getResponse(String.format(MutualFund.MF_URL, code));
         message = processResponse(response);
         MutualFund.displayStatus(this);
-        //updateValue(value);
         return message;
     }
 }

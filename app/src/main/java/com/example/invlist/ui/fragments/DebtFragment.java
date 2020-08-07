@@ -37,6 +37,7 @@ public class DebtFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getContext();
+        debtFunds.clear();
     }
 
     @Override

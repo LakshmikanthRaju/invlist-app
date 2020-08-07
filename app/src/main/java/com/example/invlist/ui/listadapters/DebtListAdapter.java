@@ -15,19 +15,13 @@ import com.example.invlist.components.MF;
 
 import java.util.ArrayList;
 
+import androidx.core.content.ContextCompat;
+
 public class DebtListAdapter extends ArrayAdapter<MF> {//implements View.OnClickListener {
 
     private ArrayList<MF> debtList;
     Context mContext;
     private Activity activity;
-
-    // View lookup cache
-    private static class ViewHolder {
-        //TextView name;
-        //TextView date;
-        //TextView diff;
-        TextView status;
-    }
 
     public DebtListAdapter(Context context, Activity activity, ArrayList<MF> debtList) {
         super(context, R.layout.mf_row_item, debtList);
@@ -62,15 +56,13 @@ public class DebtListAdapter extends ArrayAdapter<MF> {//implements View.OnClick
 
         if (debitFund.message.contains("Highest")) {
 
-            //textViewName.setTextColor(Color.rgb(27, 168, 46));
-            textViewStatus.setTextColor(Color.rgb(27, 168, 46));
+            textViewStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorGreen));
 
-            up_arrow.setColorFilter(Color.rgb(27, 168, 46));
+            up_arrow.setColorFilter(ContextCompat.getColor(mContext, R.color.colorGreen));
             up_arrow.setVisibility(View.VISIBLE);
             down_arrow.setVisibility(View.INVISIBLE);
         } else {
 
-            //textViewName.setTextColor(Color.RED);
             textViewStatus.setTextColor(Color.RED);
 
             down_arrow.setColorFilter(Color.RED);

@@ -11,10 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.invlist.R;
-import com.example.invlist.components.MF;
 import com.example.invlist.components.Share;
 
 import java.util.ArrayList;
+
+import androidx.core.content.ContextCompat;
 
 public class StockListAdapter extends ArrayAdapter<Share> {//implements View.OnClickListener {
 
@@ -54,14 +55,12 @@ public class StockListAdapter extends ArrayAdapter<Share> {//implements View.OnC
         ImageView down_arrow = (ImageView)convertView.findViewById(R.id.down_arrow_icon);
 
         if (share.message.contains("Highest")) {
-            //textViewName.setTextColor(Color.rgb(27, 168, 46));
-            textViewStatus.setTextColor(Color.rgb(27, 168, 46));
+            textViewStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorGreen));
 
-            up_arrow.setColorFilter(Color.rgb(27, 168, 46));
+            up_arrow.setColorFilter(ContextCompat.getColor(mContext, R.color.colorGreen));
             up_arrow.setVisibility(View.VISIBLE);
             down_arrow.setVisibility(View.INVISIBLE);
         } else if (share.message.contains("Lowest")){
-            //textViewName.setTextColor(Color.RED);
             textViewStatus.setTextColor(Color.RED);
 
             down_arrow.setColorFilter(Color.RED);

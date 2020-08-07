@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#242338"
+        android:textColor="@color/colorName"
         android:textSize="16dp"
         android:textStyle="bold" />
 
@@ -23,7 +23,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="50dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#4d4c59"
+        android:textColor="@color/colorDate"
         android:textSize="16dp"
         android:textStyle="bold|italic" />
 
@@ -34,7 +34,7 @@
         android:text=""
         android:layout_below="@id/name"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#1d0ec7"
+        android:textColor="@color/colorPrice"
         android:textSize="16dp"
         android:textStyle="bold|italic" />
 

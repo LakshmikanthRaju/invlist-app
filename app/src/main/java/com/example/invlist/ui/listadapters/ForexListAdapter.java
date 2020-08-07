@@ -12,23 +12,16 @@ import android.widget.TextView;
 
 import com.example.invlist.R;
 import com.example.invlist.components.Currency;
-import com.example.invlist.components.MF;
 
 import java.util.ArrayList;
+
+import androidx.core.content.ContextCompat;
 
 public class ForexListAdapter extends ArrayAdapter<Currency> {//implements View.OnClickListener {
 
     private ArrayList<Currency> forexList;
     Context mContext;
     private Activity activity;
-
-    // View lookup cache
-    private static class ViewHolder {
-        //TextView name;
-        //TextView date;
-        //TextView diff;
-        TextView status;
-    }
 
     public ForexListAdapter(Context context, Activity activity, ArrayList<Currency> mfList) {
         super(context, R.layout.mf_row_item, mfList);
@@ -62,14 +55,12 @@ public class ForexListAdapter extends ArrayAdapter<Currency> {//implements View.
         ImageView down_arrow = (ImageView)convertView.findViewById(R.id.down_arrow_icon);
 
         if (currency.message.contains("Highest")) {
-            //textViewName.setTextColor(Color.rgb(27, 168, 46));
-            textViewStatus.setTextColor(Color.rgb(27, 168, 46));
+            textViewStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorGreen));
 
-            up_arrow.setColorFilter(Color.rgb(27, 168, 46));
+            up_arrow.setColorFilter(ContextCompat.getColor(mContext, R.color.colorGreen));
             up_arrow.setVisibility(View.VISIBLE);
             down_arrow.setVisibility(View.INVISIBLE);
         } else if (currency.message.contains("Lowest")){
-            //textViewName.setTextColor(Color.RED);
             textViewStatus.setTextColor(Color.RED);
 
             down_arrow.setColorFilter(Color.RED);

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.sample2application.MainActivity">
+    <item
+        android:id="@+id/add_item"
+        android:orderInCategory="100"
+        android:title="@string/add_item"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/refresh_list"
+        android:orderInCategory="100"
+        android:title="@string/refresh_list"
+        app:showAsAction="never" />
+</menu>

@@ -47,7 +47,8 @@ public class HelperUtils {
         //if (invDb.isEquityEmpty()) {
             //System.out.println("Adding to database");
             //invDb.addEquity(defaultEquityList());
-            values = concatenate(defaultEquityList(), getElssList());
+            //values = concatenate(defaultEquityList(), getElssList());
+        values = defaultEquityList();
         /*} else {
             System.out.println("Fetching from database");
             values = concatenate(invDb.getEquity(), getElssList());
@@ -83,6 +84,7 @@ public class HelperUtils {
                 "Nippon India Low Duration Fund- Growth Plan - Growth Option",
                 "Axis Liquid Fund - Regular Plan - Growth Option",
                 "SBI MAGNUM LOW DURATION FUND - REGULAR PLAN - GROWTH",
+                "Kotak Savings Fund -Growth"
         };
         return MyDebtList;
     }
@@ -93,7 +95,8 @@ public class HelperUtils {
 
         //if (invDb.isDebtEmpty()) {
             //invDb.addDebt(defaultDebtList());
-            values = defaultDebtList();
+            //values = defaultDebtList();
+            values = concatenate(defaultDebtList(), getElssList());
         /*} else {
             values = invDb.getDebt();
         }*/

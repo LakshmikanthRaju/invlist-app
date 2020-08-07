@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">InvList</string>
     <string name="equity_text">Equity</string>
-    <string name="debt_text">Debt</string>
+    <string name="debt_text">MFs</string>
     <string name="forex_text">Forex</string>
     <string name="stock_text">Stock</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_item">Add</string>
+    <string name="refresh_list">Refresh</string>
 </resources>

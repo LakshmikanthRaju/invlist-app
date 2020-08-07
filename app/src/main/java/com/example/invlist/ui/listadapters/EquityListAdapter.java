@@ -19,6 +19,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import androidx.core.content.ContextCompat;
+
 public class EquityListAdapter extends ArrayAdapter<MF> {//implements View.OnClickListener {
 
     private ArrayList<MF> equityList;
@@ -58,15 +60,13 @@ public class EquityListAdapter extends ArrayAdapter<MF> {//implements View.OnCli
 
         if (equityFund.message.contains("Highest")) {
 
-            //textViewName.setTextColor(Color.rgb(27, 168, 46));
-            textViewStatus.setTextColor(Color.rgb(27, 168, 46));
+            textViewStatus.setTextColor(ContextCompat.getColor(mContext, R.color.colorGreen));
 
-            up_arrow.setColorFilter(Color.rgb(27, 168, 46));
+            up_arrow.setColorFilter(ContextCompat.getColor(mContext, R.color.colorGreen));
             up_arrow.setVisibility(View.VISIBLE);
             down_arrow.setVisibility(View.INVISIBLE);
         } else {
 
-            //textViewName.setTextColor(Color.RED);
             textViewStatus.setTextColor(Color.RED);
 
             down_arrow.setColorFilter(Color.RED);
