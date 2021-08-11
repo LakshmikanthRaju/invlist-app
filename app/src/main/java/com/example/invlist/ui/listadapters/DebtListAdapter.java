@@ -60,7 +60,7 @@ public class DebtListAdapter extends ArrayAdapter<MF> {//implements View.OnClick
         ImageView up_arrow = (ImageView)convertView.findViewById(R.id.up_arrow_icon);
         ImageView down_arrow = (ImageView)convertView.findViewById(R.id.down_arrow_icon);
 
-        if (debitFund.message.contains("Highest")) {
+        if (debitFund.message.startsWith("+")) {
 
             //textViewName.setTextColor(Color.rgb(27, 168, 46));
             textViewStatus.setTextColor(Color.rgb(27, 168, 46));

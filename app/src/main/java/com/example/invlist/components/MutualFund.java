@@ -111,6 +111,10 @@ public class MutualFund extends InvComponent {
         return DateUtils.getDaysCount(curDate, "dd-MMM-yyyy", oldDate, "dd-MM-yyyy");
     }
 
+    public static int getDaysCount2(String curDate, String oldDate) {
+        return DateUtils.getDaysCount(curDate, "dd-MM-yyyy", oldDate, "dd-MM-yyyy");
+    }
+
     public static void displayStatus(MF mf) {
         if (mf.invType == InvType.EQUITY) {
             EquityFragment.updateListView(mf);

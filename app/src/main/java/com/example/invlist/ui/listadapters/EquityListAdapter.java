@@ -56,7 +56,7 @@ public class EquityListAdapter extends ArrayAdapter<MF> {//implements View.OnCli
         ImageView up_arrow = (ImageView)convertView.findViewById(R.id.up_arrow_icon);
         ImageView down_arrow = (ImageView)convertView.findViewById(R.id.down_arrow_icon);
 
-        if (equityFund.message.contains("Highest")) {
+        if (equityFund.message.startsWith("+")) {
 
             //textViewName.setTextColor(Color.rgb(27, 168, 46));
             textViewStatus.setTextColor(Color.rgb(27, 168, 46));

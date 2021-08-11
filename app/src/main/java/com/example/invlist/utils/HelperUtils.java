@@ -25,10 +25,11 @@ public class HelperUtils {
                 "L&T India Value Fund-Regular Plan-Growth",
                 "ICICI Prudential Value Discovery Fund - Growth",
                 "Aditya Birla Sun Life MIDCAP Fund-Growth",
-                "HDFC Mid-Cap Opportunities Fund - Growth Option",
+                "HDFC Mid-Cap Opportunities Fund - Growth Plan",
                 "Axis Bluechip Fund - Regular Plan - Growth",
-                "Kotak Standard Multicap Fund - Growth",
+                "Kotak Flexicap Fund - Growth",
                 "L&T Mid Cap Fund-Regular Plan-Growth",
+                "Axis Midcap Fund - Regular Plan - Growth"
         };
         return MyEquityList;
     }
@@ -47,7 +48,8 @@ public class HelperUtils {
         //if (invDb.isEquityEmpty()) {
             //System.out.println("Adding to database");
             //invDb.addEquity(defaultEquityList());
-            values = concatenate(defaultEquityList(), getElssList());
+            values = defaultEquityList();
+            //values = concatenate(defaultEquityList(), getElssList());
         /*} else {
             System.out.println("Fetching from database");
             values = concatenate(invDb.getEquity(), getElssList());
@@ -83,6 +85,7 @@ public class HelperUtils {
                 "Nippon India Low Duration Fund- Growth Plan - Growth Option",
                 "Axis Liquid Fund - Regular Plan - Growth Option",
                 "SBI MAGNUM LOW DURATION FUND - REGULAR PLAN - GROWTH",
+                "Kotak Savings Fund -Growth"
         };
         return MyDebtList;
     }
@@ -93,7 +96,8 @@ public class HelperUtils {
 
         //if (invDb.isDebtEmpty()) {
             //invDb.addDebt(defaultDebtList());
-            values = defaultDebtList();
+            //values = defaultDebtList();
+            values = concatenate(defaultDebtList(), getElssList());
         /*} else {
             values = invDb.getDebt();
         }*/
