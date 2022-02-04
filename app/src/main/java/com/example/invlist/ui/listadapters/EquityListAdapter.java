@@ -52,6 +52,9 @@ public class EquityListAdapter extends ArrayAdapter<MF> {//implements View.OnCli
         TextView textViewPrice = (TextView) convertView.findViewById(R.id.price);
         textViewPrice.setText(equityFund.price);
 
+        TextView textViewHighest = (TextView) convertView.findViewById(R.id.highest);
+        textViewHighest.setText(equityFund.highest);
+
         TextView textViewStatus = (TextView) convertView.findViewById(R.id.status);
         textViewStatus.setText(equityFund.message);
 

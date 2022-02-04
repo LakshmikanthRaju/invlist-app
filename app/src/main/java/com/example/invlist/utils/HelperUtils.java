@@ -19,18 +19,24 @@ public class HelperUtils {
     }
 
     public static String[] defaultEquityList() {
-        String[] MyEquityList = {
+        return new String[] {
                 "SBI BLUE CHIP FUND-REGULAR PLAN GROWTH",
                 "Mirae Asset Large Cap Fund - Growth Plan",
+                "Axis Bluechip Fund - Regular Plan - Growth",
+
+                "HDFC Mid-Cap Opportunities Fund - Growth Plan",
+                "L&T Mid Cap Fund-Regular Plan-Growth",
+                "Axis Midcap Fund - Regular Plan - Growth",
+
+                "Kotak Flexicap Fund - Growth",
                 "L&T India Value Fund-Regular Plan-Growth",
+
+                "Nippon India Small Cap Fund - Growth Plan - Growth Option",
+                "Kotak-Small Cap Fund - Growth",
+
                 "ICICI Prudential Value Discovery Fund - Growth",
                 "Aditya Birla Sun Life MIDCAP Fund-Growth",
-                "HDFC Mid-Cap Opportunities Fund - Growth Option",
-                "Axis Bluechip Fund - Regular Plan - Growth",
-                "Kotak Standard Multicap Fund - Growth",
-                "L&T Mid Cap Fund-Regular Plan-Growth",
         };
-        return MyEquityList;
     }
 
     public static String[] concatenate(String[] a, String[] b)
@@ -42,103 +48,100 @@ public class HelperUtils {
 
     public static String[] getEquityList() {
         InvListDbHelper invDb = new InvListDbHelper(context);
-        String[] values = null;
+        String[] values = defaultEquityList();
 
-        //if (invDb.isEquityEmpty()) {
-            //System.out.println("Adding to database");
-            //invDb.addEquity(defaultEquityList());
-            //values = concatenate(defaultEquityList(), getElssList());
-        values = defaultEquityList();
-        /*} else {
+        if (invDb.isEquityEmpty()) {
+            System.out.println("Adding to database");
+            invDb.addEquity(values);
+        } else {
             System.out.println("Fetching from database");
             values = concatenate(invDb.getEquity(), getElssList());
-        }*/
+        }
         invDb.close();
-        return values;
+        return defaultEquityList();//values;
     }
 
     public static String[] defaultElssList() {
-        String[] MyELSSList = {
+        return new String[] {
                 "Axis Long Term Equity Fund - Regular Plan - Growth",
                 "DSP Tax Saver Fund - Regular Plan - Growth",
         };
-        return MyELSSList;
     }
 
     public static String[] getElssList() {
         InvListDbHelper invDb = new InvListDbHelper(context);
         String[] values = null;
 
-        //if (invDb.isElssEmpty()) {
-            //invDb.addElss(defaultElssList());
+        if (invDb.isElssEmpty()) {
             values = defaultElssList();
-        /*} else {
+            invDb.addElss(defaultElssList());
+        } else {
             values = invDb.getElss();
-        }*/
+        }
         invDb.close();
-        return values;
+        return defaultElssList();//values;
     }
 
     public static String[] defaultDebtList() {
-        String[] MyDebtList = {
+        return new String[]{
                 "Nippon India Low Duration Fund- Growth Plan - Growth Option",
                 "Axis Liquid Fund - Regular Plan - Growth Option",
                 "SBI MAGNUM LOW DURATION FUND - REGULAR PLAN - GROWTH",
                 "Kotak Savings Fund -Growth"
         };
-        return MyDebtList;
     }
 
     public static String[] getDebtList() {
         InvListDbHelper invDb = new InvListDbHelper(context);
-        String[] values = null;
+        String[] values = defaultDebtList();
 
-        //if (invDb.isDebtEmpty()) {
-            //invDb.addDebt(defaultDebtList());
-            //values = defaultDebtList();
-            values = concatenate(defaultDebtList(), getElssList());
-        /*} else {
+        if (invDb.isDebtEmpty()) {
+            invDb.addDebt(values);
+        } else {
             values = invDb.getDebt();
-        }*/
+        }
         invDb.close();
-        return values;
+        return concatenate(defaultDebtList(), getElssList());//values;
     }
 
     public static String[] defaultStockList() {
-        String[] MyStockList = { "VMW", "DELL" };
-        return MyStockList;
+        return new String[] { "VMW",
+                "FB",
+                "AAPL",
+                "NFLX",
+                "MSFT"/*,
+                "GOOGL",
+                "AMZN",
+                "DELL"*/ };
     }
 
     public static String[] getStockList() {
         InvListDbHelper invDb = new InvListDbHelper(context);
-        String[] values = null;
+        String[] values = defaultStockList();
 
         if (invDb.isStockEmpty()) {
-            invDb.addStock(defaultStockList());
-            values = defaultStockList();
+            invDb.addStock(values);
         } else {
             values = invDb.getStock();
         }
         invDb.close();
-        return values;
+        return defaultStockList();//values;
     }
 
     public static String[] defaultForexList() {
-        String[] MyForexList = { "USD", "QAR" };
-        return MyForexList;
+        return new String[] { "USD", "QAR" };
     }
 
     public static String[] getForexList() {
         InvListDbHelper invDb = new InvListDbHelper(context);
-        String[] values = null;
+        String[] values = defaultForexList();
 
         if (invDb.isForexEmpty()) {
-            invDb.addForex(defaultForexList());
-            values = defaultForexList();
+            invDb.addForex(values);
         } else {
             values = invDb.getForex();
         }
         invDb.close();
-        return values;
+        return defaultForexList();//values;
     }
 }

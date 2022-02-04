@@ -27,6 +27,17 @@
         android:textStyle="bold|italic" />
 
     <TextView
+        android:id="@+id/highest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@id/price"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorHighest"
+        android:textSize="16dp"
+        android:textStyle="bold|italic" />
+
+    <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:layout_below="@id/price"
+        android:layout_below="@id/highest"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="16dp"

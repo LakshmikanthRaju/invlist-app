@@ -6,5 +6,6 @@
     <color name="colorGreen">#1BA82E</color>
     <color name="colorName">#242338</color>
     <color name="colorPrice">#1D0EC7</color>
+    <color name="colorHighest">#606060</color>
     <color name="colorDate">#4D4C59</color>
 </resources>
