@@ -48,6 +48,9 @@ public class DebtListAdapter extends ArrayAdapter<MF> {//implements View.OnClick
         TextView textViewPrice = (TextView) convertView.findViewById(R.id.price);
         textViewPrice.setText(debitFund.price);
 
+        TextView textViewHighest = (TextView) convertView.findViewById(R.id.highest);
+        textViewHighest.setText(debitFund.highest);
+
         TextView textViewStatus = (TextView) convertView.findViewById(R.id.status);
         textViewStatus.setText(debitFund.message);
 
